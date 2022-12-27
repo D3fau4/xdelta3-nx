@@ -7,8 +7,6 @@ set(CMAKE_C_STANDARD 23)
 # the Switch tools and also find_package for libnx.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-include(DevkitA64Libnx.cmake)
-
 # SwitchTools provide various helper functions for building Switch file formats.
 include(SwitchTools)
 
