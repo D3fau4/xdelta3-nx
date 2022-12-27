@@ -11,3 +11,8 @@ jobs:
       run: |
         mkdir build
         cmake -G "Unix Makefiles" --toolchain=DevkitA64Libnx.cmake -S . -B build
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: build
+        path: build/
