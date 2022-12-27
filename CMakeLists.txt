@@ -12,3 +12,4 @@ include(SwitchTools)
 
 # Find libnx, which is required by our application.
 find_package(LIBNX REQUIRED)
+
