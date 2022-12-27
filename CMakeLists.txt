@@ -13,3 +13,8 @@ include(SwitchTools)
 # Find libnx, which is required by our application.
 find_package(LIBNX REQUIRED)
 
+target_include_directories(my_lib PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+        )
+
+add_library(xdelta3_nx source/xdelta3.c)
