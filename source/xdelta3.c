@@ -261,8 +261,8 @@
 #ifndef __XDELTA3_C_HEADER_PASS__
 #define __XDELTA3_C_HEADER_PASS__
 
-#include "xdelta3.h"
-#include "xdelta3-internal.h"
+#include "../include/xdelta3.h"
+#include "../include/xdelta3-internal.h"
 
 /***********************************************************************
  STATIC CONFIGURATION
@@ -674,7 +674,7 @@ extern const xd3_sec_type lzma_sec_type;
 
 /* Process the inline pass. */
 #define __XDELTA3_C_INLINE_PASS__
-#include "xdelta3.c"
+#include "../source/xdelta3.c"
 #undef __XDELTA3_C_INLINE_PASS__
 
 /* Secondary compression */
