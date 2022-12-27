@@ -1,0 +1,13 @@
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/d3fau4/nx-dev:nightly
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build app
+      run: |
+        mkdir build
+        cmake -G "Unix Makefiles" --toolchain=DevkitA64Libnx.cmake -S . -B build
