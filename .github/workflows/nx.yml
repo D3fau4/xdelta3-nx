@@ -1,0 +1,12 @@
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/d3fau4/nx-dev
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build app
+      run: |
+        cmake .
