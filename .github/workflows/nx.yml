@@ -9,4 +9,5 @@ jobs:
     
     - name: Build app
       run: |
-        cmake .
+        mkdir build
+        cmake -G "Unix Makefiles" --toolchain=DevkitA64Libnx.cmake -S . -B build
