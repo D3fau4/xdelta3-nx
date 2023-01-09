@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.24)
-project(xdelta3_nx C)
+cmake_minimum_required(VERSION 3.22)
+project(xdelta3_nx C CPP ASM)
 
 set(CMAKE_C_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23)
 
 # We have to add the cmake directory to have access to
 # the Switch tools and also find_package for libnx.
