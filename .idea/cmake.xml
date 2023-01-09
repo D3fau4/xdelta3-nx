@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug-Switch" ENABLED="true" GENERATION_DIR="cmake-build-debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="WSL" GENERATION_OPTIONS="-G &quot;Unix Makefiles&quot; --toolchain=DevkitA64Libnx.cmake">
+        <ADDITIONAL_GENERATION_ENVIRONMENT>
+          <envs>
+            <env name="DEVKITARM" value="/opt/devkitpro/devkitARM" />
+            <env name="DEVKITPPC" value="/opt/devkitpro/devkitPPC" />
+            <env name="DEVKITPRO" value="/opt/devkitpro" />
+          </envs>
+        </ADDITIONAL_GENERATION_ENVIRONMENT>
+      </configuration>
+    </configurations>
+  </component>
+</project>

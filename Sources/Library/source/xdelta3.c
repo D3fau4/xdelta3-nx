@@ -345,7 +345,7 @@ typedef unsigned int xd3_rtype;
 
 /***********************************************************************/
 
-#include "xdelta3-list.h"
+#include "../include/xdelta3-list.h"
 
 XD3_MAKELIST(xd3_rlist, xd3_rinst, link);
 
@@ -665,11 +665,11 @@ extern const xd3_sec_type lzma_sec_type;
 
 /***********************************************************************/
 
-#include "xdelta3-hash.h"
+#include "../include/xdelta3-hash.h"
 
 /* Process template passes - this includes xdelta3.c several times. */
 #define __XDELTA3_C_TEMPLATE_PASS__
-#include "xdelta3-cfgs.h"
+#include "../include/xdelta3-cfgs.h"
 #undef __XDELTA3_C_TEMPLATE_PASS__
 
 /* Process the inline pass. */
@@ -2102,7 +2102,7 @@ xd3_get_appheader (xd3_stream  *stream,
  Decoder stuff
  *************************************************/
 
-#include "xdelta3-decode.h"
+#include "../include/xdelta3-decode.h"
 
 /****************************************************************
  Encoder stuff
