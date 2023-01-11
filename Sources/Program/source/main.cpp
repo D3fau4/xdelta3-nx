@@ -28,13 +28,13 @@ int main(int argc, char* argv[])
     // Other initialization goes here. As a demonstration, we print hello world.
     printf("Hello World!\n");
     Result rc = romfsInit();
-    /*if (R_FAILED(rc))
+    if (R_FAILED(rc))
         printf("romfsInit: %08X\n", rc);
     else
     {
         printf("romfs Init Successful!\n");
-        //patch("romfs:/Orifile/myfile.dat","sdmc:/mod.dat","romfs:/patch/patch.xdelta3");
-    }*/
+        patch("romfs:/Orifile/myfile.dat", "sdmc:/mod.dat", "romfs:/patch/patch.xdelta3");
+    }
 
     // Main loop
     while (appletMainLoop())
