@@ -1,6 +1,6 @@
-if(NOT SWITCH)
+if (NOT SWITCH)
     message(FATAL_ERROR "This helper can only be used when cross-compiling for the Switch")
-endif()
+endif ()
 
 # The directory of this file, which is needed to generate bin2s header files.
 get_filename_component(__SWITCH_TOOLS_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
@@ -8,14 +8,14 @@ get_filename_component(__SWITCH_TOOLS_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 ## A macro to find tools that come with devkitPro which are
 ## used for working with Switch file formats.
 macro(find_tool tool)
-    if(NOT ${tool})
+    if (NOT ${tool})
         find_program(${tool} ${tool})
         if (${tool})
             message(STATUS "${tool} - found")
-        else()
+        else ()
             message(WARNING "${tool} - not found")
-        endif()
-    endif()
+        endif ()
+    endif ()
 endmacro()
 
 ## elf2kip
@@ -49,36 +49,36 @@ find_tool(bin2s)
 ## if `title` is empty, the title will be set
 ## to the value of `CMAKE_PROJECT_NAME`.
 macro(set_app_title title)
-    if("${title}" STREQUAL "title-NOTFOUND")
+    if ("${title}" STREQUAL "title-NOTFOUND")
         set(__HOMEBREW_APP_TITLE "${CMAKE_PROJECT_NAME}")
         message(WARNING "The title of the application is unspecified")
-    else()
+    else ()
         set(__HOMEBREW_APP_TITLE ${title})
-    endif()
+    endif ()
 endmacro()
 
 ## A macro to set the author of the application.
 ## If `author` is empty, the author will be set
 ## to "Unspecified author".
 macro(set_app_author author)
-    if("${author}" STREQUAL "author-NOTFOUND")
+    if ("${author}" STREQUAL "author-NOTFOUND")
         set(__HOMEBREW_APP_AUTHOR "Unspecified author")
         message(WARNING "The author of the application is unspecified")
-    else()
+    else ()
         set(__HOMEBREW_APP_AUTHOR ${author})
-    endif()
+    endif ()
 endmacro()
 
 ## A macro to set the version of the application.
 ## If `version` is empty, the version will be set
 ## to "1.0.0".
 macro(set_app_version version)
-    if("${version}" STREQUAL "version-NOTFOUND")
+    if ("${version}" STREQUAL "version-NOTFOUND")
         set(__HOMEBREW_APP_VERSION "1.0.0")
         message(WARNING "The version of the application is unspecified")
-    else()
+    else ()
         set(__HOMEBREW_APP_VERSION ${version})
-    endif()
+    endif ()
 endmacro()
 
 ## A macro to resolve the icon for the homebrew application.
@@ -92,18 +92,18 @@ endmacro()
 ## No icon will be resolved, if a variable called `NO_ICON` is set to
 ## anything.
 macro(set_app_icon file)
-    if(NOT NO_ICON)
-        if(EXISTS ${file})
+    if (NOT NO_ICON)
+        if (EXISTS ${file})
             set(__HOMEBREW_ICON ${file})
-        elseif(EXISTS ${PROJECT_SOURCE_DIR}/icon.jpg)
+        elseif (EXISTS ${PROJECT_SOURCE_DIR}/icon.jpg)
             set(__HOMEBREW_ICON ${PROJECT_SOURCE_DIR}/icon.jpg)
-        elseif(LIBNX)
+        elseif (LIBNX)
             set(__HOMEBREW_ICON ${LIBNX}/default_icon.jpg)
-        else()
+        else ()
             # Purposefully don't set `__HOMEBREW_ICON` to anything.
             message(WARNING "Failed to resolve application icon")
-        endif()
-    endif()
+        endif ()
+    endif ()
 endmacro()
 
 ## A macro to specify the NPDM JSON configuration for a system module.
@@ -111,14 +111,14 @@ endmacro()
 ## If the file doesn't exist, the project root will be checked for an
 ## config.json that can be used.
 macro(set_app_json file)
-    if(EXISTS ${file})
+    if (EXISTS ${file})
         set(__HOMEBREW_JSON_CONFIG ${file})
-    elseif(EXISTS ${PROJECT_SOURCE_DIR}/config.json)
+    elseif (EXISTS ${PROJECT_SOURCE_DIR}/config.json)
         set(__HOMEBREW_JSON_CONFIG ${PROJECT_SOURCE_DIR}/config.json)
-    else()
+    else ()
         # Purposefully don't set `__HOMEBREW_JSON_CONFIG` to anything.
         message(WARNING "Failed to resolve the JSON config")
-    endif()
+    endif ()
 endmacro()
 
 ## Adds a binary library target with the supplied name.
@@ -126,18 +126,18 @@ endmacro()
 ## within ARGN and passes them to bin2s to create
 ## a library target from binary files that can be linked.
 macro(__add_binary_library target)
-    if(NOT ${ARGC} GREATER 1)
+    if (NOT ${ARGC} GREATER 1)
         message(FATAL_ERROR "No input files provided")
-    endif()
+    endif ()
 
     # Check if ASM is an enabled project language.
     get_cmake_property(ENABLED_LANGUAGES ENABLED_LANGUAGES)
-    if(NOT ENABLED_LANGUAGES MATCHES ".*ASM.*")
+    if (NOT ENABLED_LANGUAGES MATCHES ".*ASM.*")
         message(FATAL_ERROR "To use this macro, call enable_language(ASM) first")
-    endif()
+    endif ()
 
     # Generate the bin2s header files.
-    foreach(__file ${ARGN})
+    foreach (__file ${ARGN})
         # Extract and compose the file name for the header.
         get_filename_component(__file_name ${__file} NAME)
         string(REGEX REPLACE "^([0-9])" "_\\1" __BINARY_FILE ${__file_name})
@@ -145,15 +145,15 @@ macro(__add_binary_library target)
 
         # Generate the header.
         configure_file(${__SWITCH_TOOLS_DIR}/bin2s_header.h.in ${CMAKE_CURRENT_BINARY_DIR}/bin2s_include/${__BINARY_FILE}.h)
-    endforeach()
+    endforeach ()
 
     # Build the Assembly file.
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin2s_lib)
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/bin2s_lib/${target}.s
-        COMMAND ${bin2s} ${ARGN} > ${CMAKE_CURRENT_BINARY_DIR}/bin2s_lib/${target}.s
-        DEPENDS ${ARGN}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/bin2s_lib/${target}.s
+            COMMAND ${bin2s} ${ARGN} > ${CMAKE_CURRENT_BINARY_DIR}/bin2s_lib/${target}.s
+            DEPENDS ${ARGN}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     )
 
     # Add the respective library target.
@@ -167,9 +167,9 @@ endmacro()
 ## a library target which will be linked against the
 ## `target` argument.
 function(target_embed_binaries target)
-    if(NOT ${ARGC} GREATER 1)
+    if (NOT ${ARGC} GREATER 1)
         message(FATAL_ERROR "No input files provided")
-    endif()
+    endif ()
 
     get_filename_component(__1st_bin_file ${ARGV1} NAME)
     __add_binary_library(__${target}_embed_${__1st_bin_file} ${ARGN})
@@ -199,17 +199,17 @@ function(__generate_nacp target)
 
     # Title ID is mostly irrelevant, that's why it has no
     # special definition routine and is only parsed here.
-    if(NOT "${title_id}" STREQUAL "")
+    if (NOT "${title_id}" STREQUAL "")
         set(NACPFLAGS "--titleid=\"${title_id}\"")
-    else()
+    else ()
         set(NACPFLAGS "")  # Purposefully empty.
-    endif()
+    endif ()
 
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp
-        COMMAND ${nacptool} --create ${__HOMEBREW_APP_TITLE} ${__HOMEBREW_APP_AUTHOR} ${__HOMEBREW_APP_VERSION} ${target_we}.nacp ${NACPFLAGS}
-        DEPENDS ${target}
-        VERBATIM
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp
+            COMMAND ${nacptool} --create ${__HOMEBREW_APP_TITLE} ${__HOMEBREW_APP_AUTHOR} ${__HOMEBREW_APP_VERSION} ${target_we}.nacp ${NACPFLAGS}
+            DEPENDS ${target}
+            VERBATIM
     )
 endfunction()
 
@@ -230,16 +230,16 @@ function(__generate_npdm target)
     set_app_json(${config_json})
 
     # The JSON configuration is crucial, we cannot continue without it.
-    if(NOT __HOMEBREW_JSON_CONFIG)
+    if (NOT __HOMEBREW_JSON_CONFIG)
         message(FATAL_ERROR "Cannot generate a NPDM file without the \"CONFIG_JSON\" property being set for the target")
-    endif()
+    endif ()
 
     # Build the NPDM file.
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm
-        COMMAND ${npdmtool} ${__HOMEBREW_JSON_CONFIG} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm
-        DEPENDS ${target} ${__HOMEBREW_JSON_CONFIG}
-        VERBATIM
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm
+            COMMAND ${npdmtool} ${__HOMEBREW_JSON_CONFIG} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm
+            DEPENDS ${target} ${__HOMEBREW_JSON_CONFIG}
+            VERBATIM
     )
 endfunction()
 
@@ -257,53 +257,57 @@ function(add_nro_target target)
     get_target_property(icon ${target} "ICON")
     get_target_property(romfs ${target} "ROMFS")
 
-    set_app_icon(${icon})
-
-    # Construct the `NROFLAGS` to invoke elf2nro with.
-    set(NROFLAGS "")
-
-    # Set icon for the NRO, if given.
-    if(__HOMEBREW_ICON)
-        string(APPEND NROFLAGS "--icon=${__HOMEBREW_ICON}")
-    endif()
-
     # Add RomFS to the NRO, if given.
-    if(NOT "${romfs}" STREQUAL "romfs-NOTFOUND")
-        if(IS_DIRECTORY ${romfs})
+    if (NOT "${romfs}" STREQUAL "romfs-NOTFOUND")
+        if (IS_DIRECTORY ${romfs})
             # RomFS is a directory, pass --romfsdir to
             # elf2nro and let it build an image for us.
-            string(APPEND NROFLAGS " --romfsdir=${romfs}")
-        else()
+            set(romfs "--romfsdir=${romfs}")
+        else ()
             # A RomFS image was provided, which can be
             # supplied to the --romfs flag.
-            if(EXISTS ${romfs})
-                string(APPEND NROFLAGS " --romfs=${romfs}")
-            else()
+            if (EXISTS ${romfs})
+                set(romfs "--romfs=${romfs}")
+            else ()
                 message(WARNING "The provided RomFS image at ${romfs} doesn't exist")
-            endif()
-        endif()
-    endif()
+            endif ()
+        endif ()
+    endif ()
+
+    set_app_icon(${icon})
+    if (__HOMEBREW_ICON)
+        set(icon "--icon=${__HOMEBREW_ICON}")
+    endif ()
 
     # Build the NRO file.
-    if(NOT NO_NACP)
+    if (NOT NO_NACP)
         __generate_nacp(${target})
+        set(NACP_FILE ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp)
 
-        add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro
-            COMMAND ${elf2nro} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro --nacp=${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp ${NROFLAGS}
-            DEPENDS ${target} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp
-            VERBATIM
-        )
-    else()
+        set(__NRO_COMMAND ${elf2nro}
+                $<TARGET_FILE:${target}>
+                ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro
+                --nacp=${NACP_FILE}
+                ${romfs}
+                ${icon}
+                )
+    else ()
         message(STATUS "No .nacp file will be generated for ${target_we}.nro")
 
-        add_custom_command(
+        set(__NRO_COMMAND ${elf2nro}
+                $<TARGET_FILE:${target}>
+                ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro
+                ${romfs}
+                ${icon}
+                )
+    endif ()
+
+    add_custom_command(
             OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro
-            COMMAND ${elf2nro} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro ${NROFLAGS}
-            DEPENDS ${target}
+            COMMAND ${__NRO_COMMAND}
+            DEPENDS ${target} ${NACP_FILE}
             VERBATIM
-        )
-    endif()
+    )
 
     # Add the respective NRO target and set the required linker flags for the original target.
     add_custom_target(${target_we}_nro ALL SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro)
@@ -320,10 +324,10 @@ function(add_nso_target target)
 
     # Build the NSO file.
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso
-        COMMAND ${elf2nso} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso
-        DEPENDS ${target}
-        VERBATIM
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso
+            COMMAND ${elf2nso} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso
+            DEPENDS ${target}
+            VERBATIM
     )
 
     # Add the respective NSO target and set the required linker flags for the original target.
@@ -347,20 +351,20 @@ function(add_nsp_target target)
     __generate_npdm(${target})
 
     # Add the required NSO target, if not configured yet.
-    if(NOT TARGET ${target_we}_nso)
+    if (NOT TARGET ${target_we}_nso)
         add_nso_target(${target})
-    endif()
+    endif ()
 
     # Build the NSP file.
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nsp
-        PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/exefs
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso ${CMAKE_CURRENT_BINARY_DIR}/exefs/main
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm ${CMAKE_CURRENT_BINARY_DIR}/exefs/main.npdm
-        COMMAND ${build_pfs0} ${CMAKE_CURRENT_BINARY_DIR}/exefs ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nsp
-        DEPENDS ${target} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm
-        VERBATIM
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nsp
+            PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/exefs
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso ${CMAKE_CURRENT_BINARY_DIR}/exefs/main
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm ${CMAKE_CURRENT_BINARY_DIR}/exefs/main.npdm
+            COMMAND ${build_pfs0} ${CMAKE_CURRENT_BINARY_DIR}/exefs ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nsp
+            DEPENDS ${target} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nso ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.npdm
+            VERBATIM
     )
 
     # Add the respective NSP target and set the required linker flags for the original target.
@@ -386,16 +390,16 @@ function(add_kip_target target)
     set_app_json(${config_json})
 
     # The JSON configuration is crucial, we cannot continue without it.
-    if(NOT __HOMEBREW_JSON_CONFIG)
+    if (NOT __HOMEBREW_JSON_CONFIG)
         message(FATAL_ERROR "Cannot generate a KIP file without the \"CONFIG_JSON\" property being set for the target")
-    endif()
+    endif ()
 
     # Build the KIP file.
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.kip
-        COMMAND ${elf2kip} $<TARGET_FILE:${target}> ${__HOMEBREW_JSON_CONFIG} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.kip
-        DEPENDS ${target} ${__HOMEBREW_JSON_CONFIG}
-        VERBATIM
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.kip
+            COMMAND ${elf2kip} $<TARGET_FILE:${target}> ${__HOMEBREW_JSON_CONFIG} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.kip
+            DEPENDS ${target} ${__HOMEBREW_JSON_CONFIG}
+            VERBATIM
     )
 
     # Add the respective KIP target and set the required linker flags for the original target.
