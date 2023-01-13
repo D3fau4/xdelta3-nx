@@ -33,7 +33,11 @@ int main(int argc, char* argv[])
     else
     {
         printf("romfs Init Successful!\n");
-        patch("romfs:/Orifile/myfile.dat", "sdmc:/mod.dat", "romfs:/patch/patch.xdelta3");
+        int res = patch("romfs:/Orifile/myfile.dat", "sdmc:/mod.dat", "romfs:/patch/patch.xdelta3");
+        if (res == 0)
+            printf("Patched Successful!\n");
+        else
+            printf("Patched Failed!: %i\n", res);
     }
 
     // Main loop

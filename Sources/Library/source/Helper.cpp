@@ -146,16 +146,18 @@ int internalpatch(int encode, FILE *InFile, FILE *SrcFile, FILE *OutFile, int Bu
 
 int patch(std::string inPath, std::string outPath, std::string patchPath) {
     FILE *infile = fopen(inPath.c_str(), "rb");
-    FILE *outfile = fopen(outPath.c_str(), "rb");
-    FILE *patch = fopen(patchPath.c_str(), "wb");
+    FILE *outfile = fopen(outPath.c_str(), "wb");
+    FILE *patch = fopen(patchPath.c_str(), "rb");
 
-    printf("File opened!");
+    if (!outfile || !infile || !patch) {
+        printf("errno is %d, %s\n", errno, strerror(errno));
+    }
 
-    //int res = internalpatch(0, infile, outfile, patch, 0x1000);
+    int res = internalpatch(0, patch, infile, outfile, 0x100);
 
     fclose(outfile);
     fclose(infile);
     fclose(patch);
 
-    return 0;
+    return res;
 }
