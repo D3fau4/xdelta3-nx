@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     padInitializeDefault(&pad);
 
     // Other initialization goes here. As a demonstration, we print hello world.
-    printf("Hello World!\n");
+    printf("Welcome to xdelta3-nx!\n");
     Result rc = romfsInit();
     if (R_FAILED(rc))
         printf("romfsInit: %08X\n", rc);

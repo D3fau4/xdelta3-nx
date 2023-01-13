@@ -153,7 +153,7 @@ int patch(std::string inPath, std::string outPath, std::string patchPath) {
         printf("errno is %d, %s\n", errno, strerror(errno));
     }
 
-    int res = internalpatch(0, patch, infile, outfile, 0x100);
+    int res = internalpatch(0, patch, infile, outfile, 0x1000);
 
     fclose(outfile);
     fclose(infile);
