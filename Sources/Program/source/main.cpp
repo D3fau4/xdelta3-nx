@@ -24,6 +24,8 @@ int main(int argc, char* argv[])
     // Initialize the default gamepad (which reads handheld mode inputs as well as the first connected controller)
     PadState pad;
     padInitializeDefault(&pad);
+    // Init Performance management
+    apmInitialize();
 
     // Other initialization goes here. As a demonstration, we print hello world.
     printf("Welcome to xdelta3-nx!\n");
@@ -33,11 +35,16 @@ int main(int argc, char* argv[])
     else
     {
         printf("romfs Init Successful!\n");
+        // Set the Cpu boost mode on (This is recommended as it reduces the patching time of a 10mb file from 47 sec to 14 sec)
+        appletSetCpuBoostMode(ApmCpuBoostMode_FastLoad);
         int res = patch("romfs:/Orifile/myfile.dat", "sdmc:/mod.dat", "romfs:/patch/patch.xdelta3");
         if (res == 0)
             printf("Patched Successful!\n");
         else
             printf("Patched Failed!: %i\n", res);
+
+        // Set the Cpu boost mode off
+        appletSetCpuBoostMode(ApmCpuBoostMode_Normal);
     }
 
     // Main loop
@@ -61,5 +68,9 @@ int main(int argc, char* argv[])
 
     // Deinitialize and clean up resources used by the console (important!)
     consoleExit(NULL);
+
+    // Close Performance management
+    apmExit();
+
     return 0;
 }

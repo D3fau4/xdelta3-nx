@@ -151,6 +151,7 @@ int patch(std::string inPath, std::string outPath, std::string patchPath) {
 
     if (!outfile || !infile || !patch) {
         printf("errno is %d, %s\n", errno, strerror(errno));
+        return 1;
     }
 
     int res = internalpatch(0, patch, infile, outfile, 0x1000);
